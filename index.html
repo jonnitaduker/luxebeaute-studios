@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxeBeauté Studios · House of Glam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background: #0a0a0a; color: #e8dfc8; min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+    /* NAV */
+    .lb-nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; border-bottom: 0.5px solid #2a2412; background: #0a0a0a; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 0.75rem; }
+    .lb-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; letter-spacing: 0.18em; color: #c9a84c; text-transform: uppercase; }
+    .lb-logo span { color: #e8dfc8; }
+    .lb-nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .lb-nav-links a { text-decoration: none; color: #a89878; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 400; transition: color 0.2s; cursor: pointer; }
+    .lb-nav-links a:hover { color: #c9a84c; }
+    .lb-nav-cta { background: transparent; border: 0.5px solid #c9a84c; color: #c9a84c; padding: 0.45rem 1.2rem; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .lb-nav-cta:hover { background: #c9a84c; color: #0a0a0a; }
+
+    /* HERO */
+    .lb-hero { padding: 5rem 2rem 4rem; text-align: center; border-bottom: 0.5px solid #1a1508; position: relative; }
+    .lb-hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, #c9a84c); }
+    .lb-eyebrow { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: #c9a84c; margin-bottom: 1.5rem; font-weight: 400; }
+    .lb-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 3.6rem; font-weight: 300; line-height: 1.1; color: #f0e8d2; margin-bottom: 0.5rem; }
+    .lb-hero h1 em { font-style: italic; color: #c9a84c; }
+    .lb-hero-sub { font-size: 13px; color: #7a6e5a; letter-spacing: 0.06em; max-width: 440px; margin: 0 auto 2.5rem; font-weight: 300; }
+    .lb-hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-gold { background: #c9a84c; color: #0a0a0a; border: none; padding: 0.75rem 2rem; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .btn-gold:hover { background: #dfc06a; }
+    .btn-outline { background: transparent; color: #e8dfc8; border: 0.5px solid #3a3020; padding: 0.75rem 2rem; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .btn-outline:hover { border-color: #c9a84c; color: #c9a84c; }
+
+    /* TAB BAR */
+    .lb-bar { display: flex; border-bottom: 0.5px solid #1a1508; overflow-x: auto; }
+    .lb-bar-tab { padding: 0.9rem 1.5rem; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5a5040; cursor: pointer; white-space: nowrap; background: none; border: none; font-family: 'Jost', sans-serif; transition: all 0.2s; border-bottom: 1px solid transparent; }
+    .lb-bar-tab.active { color: #c9a84c; border-bottom: 1px solid #c9a84c; }
+    .lb-bar-tab:hover { color: #c9a84c; }
+
+    /* SECTIONS */
+    .lb-section { padding: 3rem 2rem; border-bottom: 0.5px solid #1a1508; display: none; }
+    .lb-section.active { display: block; }
+    .lb-section-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem; }
+    .lb-section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: #f0e8d2; }
+    .lb-section-rule { flex: 1; height: 0.5px; background: #1e1a10; }
+
+    /* BUNDLE HERO */
+    .bundle-hero { border: 0.5px solid #c9a84c33; background: #0e0c06; padding: 2.5rem; margin-bottom: 2rem; }
+    .bundle-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .bundle-badge { display: inline-block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 4px 12px; background: #c9a84c22; color: #c9a84c; border: 0.5px solid #c9a84c44; margin-bottom: 1rem; }
+    .bundle-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: #f0e8d2; margin-bottom: 0.5rem; line-height: 1.2; }
+    .bundle-desc { font-size: 13px; color: #6a5e3a; font-weight: 300; line-height: 1.7; max-width: 500px; }
+    .bundle-price-block { text-align: right; flex-shrink: 0; }
+    .bundle-price { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: #c9a84c; line-height: 1; }
+    .bundle-orig { font-size: 13px; color: #3a3020; text-decoration: line-through; margin-top: 6px; }
+    .bundle-save { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8a7030; margin-top: 3px; }
+
+    /* BUNDLE COURSES LIST */
+    .bundle-courses-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4030; margin-bottom: 1rem; border-top: 0.5px solid #1e1a10; padding-top: 1.5rem; }
+    .bundle-courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: #1a1508; margin-bottom: 1.5rem; }
+    .bundle-course-item { background: #0a0906; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 12px; }
+    .bundle-course-num { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: #c9a84c44; line-height: 1; flex-shrink: 0; min-width: 28px; }
+    .bundle-course-info {}
+    .bundle-course-name { font-size: 13px; color: #c8bda0; font-weight: 400; margin-bottom: 2px; }
+    .bundle-course-price { font-size: 11px; color: #4a4030; letter-spacing: 0.06em; }
+    .bundle-course-check { font-size: 10px; color: #c9a84c; margin-top: 2px; }
+    .bundle-cta-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .bundle-value-note { font-size: 12px; color: #5a5040; font-weight: 300; }
+    .bundle-value-note strong { color: #8a7040; font-weight: 400; }
+
+    /* INDIVIDUAL COURSES */
+    .courses-heading { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4030; margin-bottom: 1rem; }
+    .lb-products { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: #1a1508; }
+    .lb-product-card { background: #0d0d0a; padding: 1.5rem 1.25rem; transition: background 0.2s; }
+    .lb-product-card:hover { background: #111109; }
+    .lb-product-num { font-size: 10px; letter-spacing: 0.18em; color: #3a3020; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .lb-product-badge { display: inline-block; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 0.75rem; background: #1e1508; color: #c9a84c; }
+    .lb-product-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; color: #e0d4ba; margin-bottom: 0.4rem; line-height: 1.3; }
+    .lb-product-desc { font-size: 12px; color: #5a5040; margin-bottom: 1rem; font-weight: 300; line-height: 1.5; }
+    .lb-product-price { font-size: 1.1rem; color: #c9a84c; font-weight: 300; }
+    .lb-product-price span { font-size: 11px; color: #4a4030; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 4px; }
+    .lb-product-cta { display: block; margin-top: 1rem; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #3a3020; cursor: pointer; background: none; border: none; font-family: 'Jost', sans-serif; padding: 0; transition: color 0.2s; }
+    .lb-product-card:hover .lb-product-cta { color: #c9a84c; }
+
+    /* MEMBERSHIP */
+    .lb-membership { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: #1a1508; }
+    .lb-tier { background: #0d0d0a; padding: 2rem 1.5rem; }
+    .lb-tier.featured { background: #0f0e07; }
+    .lb-tier-name { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a84c; margin-bottom: 0.5rem; }
+    .lb-tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: #f0e8d2; margin-bottom: 0.25rem; }
+    .lb-tier-cadence { font-size: 11px; color: #4a4030; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .lb-tier-features { list-style: none; margin-bottom: 1.5rem; }
+    .lb-tier-features li { font-size: 12px; color: #7a6e5a; padding: 0.35rem 0; border-bottom: 0.5px solid #161208; font-weight: 300; display: flex; align-items: center; gap: 8px; }
+    .check { color: #c9a84c; font-size: 13px; }
+
+    /* AI */
+    .lb-ai-panel { background: #080806; border: 0.5px solid #2a2010; padding: 1.5rem; }
+    .lb-ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 0.5px solid #1a1508; }
+    .lb-ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #c9a84c; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+    .lb-ai-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #c9a84c; }
+    .lb-ai-messages { min-height: 160px; max-height: 260px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .lb-msg { font-size: 13px; line-height: 1.6; font-weight: 300; }
+    .lb-msg.ai { color: #c8bda0; max-width: 88%; }
+    .lb-msg.user { color: #6a5e4a; align-self: flex-end; text-align: right; font-size: 12px; font-style: italic; }
+    .lb-ai-typing { display: flex; gap: 4px; align-items: center; height: 18px; }
+    .lb-ai-typing span { width: 5px; height: 5px; border-radius: 50%; background: #c9a84c; animation: bounce 1.2s infinite; }
+    .lb-ai-typing span:nth-child(2){animation-delay:.2s} .lb-ai-typing span:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-5px);opacity:1}}
+    .lb-ai-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.75rem; }
+    .lb-chip { background: transparent; border: 0.5px solid #2a2010; color: #5a5040; padding: 4px 12px; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s; }
+    .lb-chip:hover { border-color: #c9a84c; color: #c9a84c; }
+    .lb-ai-input-row { display: flex; gap: 8px; }
+    .lb-ai-input { flex: 1; background: #0f0e09; border: 0.5px solid #2a2010; color: #c8bda0; padding: 0.55rem 0.85rem; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300; outline: none; }
+    .lb-ai-input::placeholder { color: #3a3020; }
+    .lb-ai-input:focus { border-color: #c9a84c; }
+    .lb-ai-send { background: #c9a84c; border: none; color: #0a0a0a; padding: 0 1.2rem; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+    .lb-ai-send:hover { background: #dfc06a; }
+
+    /* TOAST */
+    #cart-toast { display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #0f0e09; border: 0.5px solid #c9a84c44; color: #c9a84c; padding: 0.9rem 2rem; font-size: 12px; letter-spacing: 0.08em; z-index: 999; white-space: nowrap; }
+
+    /* MODAL OVERLAY */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: #000000cc; z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #0d0c08; border: 0.5px solid #3a2c10; max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { padding: 1.5rem 1.5rem 1rem; border-bottom: 0.5px solid #1e1a10; display: flex; justify-content: space-between; align-items: flex-start; }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: #f0e8d2; }
+    .modal-close { background: none; border: none; color: #4a4030; font-size: 22px; cursor: pointer; line-height: 1; padding: 0; transition: color 0.2s; }
+    .modal-close:hover { color: #c9a84c; }
+    .modal-body { padding: 1.5rem; }
+    .modal-price-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid #1e1a10; }
+    .modal-price { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: #c9a84c; }
+    .modal-orig { font-size: 12px; color: #3a3020; text-decoration: line-through; }
+    .modal-includes-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4030; margin-bottom: 1rem; }
+    .modal-course-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 0.5px solid #161208; }
+    .modal-course-row:last-child { border-bottom: none; }
+    .modal-course-name { font-size: 13px; color: #c8bda0; font-weight: 300; }
+    .modal-course-price { font-size: 12px; color: #6a5e3a; }
+    .modal-check { color: #c9a84c; font-size: 13px; margin-right: 8px; }
+    .modal-actions { margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid #1e1a10; display: flex; flex-direction: column; gap: 10px; }
+    .modal-note { font-size: 11px; color: #4a4030; text-align: center; letter-spacing: 0.06em; margin-top: 0.5rem; }
+    .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0.5rem; }
+    .pay-opt { background: #0a0906; border: 0.5px solid #2a2010; padding: 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .pay-opt:hover { border-color: #c9a84c; }
+    .pay-opt-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6a5e3a; margin-bottom: 3px; }
+    .pay-opt-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #c9a84c; }
+    .pay-opt-note { font-size: 10px; color: #4a4030; }
+
+    .lb-footer { padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .lb-footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; font-weight: 300; letter-spacing: 0.18em; color: #3a3020; text-transform: uppercase; }
+    .lb-footer-copy { font-size: 11px; color: #2a2010; letter-spacing: 0.08em; }
+  </style>
+</head>
+<body>
+
+<!-- CART TOAST -->
+<div id="cart-toast"></div>
+
+<!-- BUNDLE PURCHASE MODAL -->
+<div class="modal-overlay" id="bundle-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c9a84c;margin-bottom:6px;">✦ Complete Collection</div>
+        <div class="modal-title">The Complete House of Glam Collection</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-price-row">
+        <div>
+          <div class="modal-price">$2,497</div>
+          <div class="modal-orig">$2,682 if purchased individually</div>
+          <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7030;margin-top:3px;">You save $100</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#4a4030;">6 courses included</div>
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#4a4030;margin-top:4px;">Lifetime access</div>
+        </div>
+      </div>
+
+      <div class="modal-includes-label">What's included — all 6 courses</div>
+
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 01 — Prep, Application & Shaping</span></div>
+        <div class="modal-course-price">$300</div>
+      </div>
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 02 — French Line & Smile Lines</span></div>
+        <div class="modal-course-price">$300</div>
+      </div>
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 03 — Nail Art & Freestyles</span></div>
+        <div class="modal-course-price">$300</div>
+      </div>
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 04 — E-Filing & Advanced Prep</span></div>
+        <div class="modal-course-price">$200</div>
+      </div>
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 05 — Nail Business & Client Booking</span></div>
+        <div class="modal-course-price">$250</div>
+      </div>
+      <div class="modal-course-row">
+        <div><span class="modal-check">✓</span><span class="modal-course-name">Course 06 — Content Creation for Nail Techs</span></div>
+        <div class="modal-course-price">$150</div>
+      </div>
+
+      <div class="modal-actions">
+        <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#4a4030;margin-bottom:4px;">Choose your payment option</div>
+        <div class="payment-options">
+          <div class="pay-opt" onclick="handlePurchase('bundle-full')">
+            <div class="pay-opt-label">Pay in full</div>
+            <div class="pay-opt-price">$2,497</div>
+            <div class="pay-opt-note">Best value · Save $185</div>
+          </div>
+          <div class="pay-opt" onclick="handlePurchase('bundle-split')">
+            <div class="pay-opt-label">2 payments of</div>
+            <div class="pay-opt-price">$850</div>
+            <div class="pay-opt-note">Split 30 days apart</div>
+          </div>
+        </div>
+        <button class="btn-gold" style="width:100%;padding:0.85rem;font-size:12px;letter-spacing:0.14em;" onclick="handlePurchase('bundle-full')">Purchase Complete Collection — $2,497</button>
+        <div class="modal-note">Secure checkout · Instant access · Lifetime access to all 6 courses</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SINGLE COURSE MODAL -->
+<div class="modal-overlay" id="course-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c9a84c;margin-bottom:6px;" id="course-modal-num"></div>
+        <div class="modal-title" id="course-modal-title"></div>
+      </div>
+      <button class="modal-close" onclick="closeCourseModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-price-row">
+        <div class="modal-price" id="course-modal-price"></div>
+        <div style="text-align:right;">
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#4a4030;">Individual course</div>
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#4a4030;margin-top:4px;">Lifetime access</div>
+        </div>
+      </div>
+      <div id="course-modal-desc" style="font-size:13px;color:#7a6e5a;font-weight:300;line-height:1.7;margin-bottom:1.5rem;"></div>
+
+      <div style="background:#0a0906;border:0.5px solid #2a2010;padding:1rem;margin-bottom:1.5rem;">
+        <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#5a5040;margin-bottom:0.5rem;">Want all 6 courses?</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+          <div style="font-size:12px;color:#6a5e3a;font-weight:300;">Complete House of Glam Collection — <span style="color:#c9a84c;">$2,497</span> <span style="color:#3a3020;text-decoration:line-through;font-size:11px;">$2,682</span></div>
+          <button class="btn-gold" style="padding:0.4rem 1rem;font-size:10px;" onclick="closeCourseModal(); openBundleModal();">Upgrade to Bundle</button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-gold" style="width:100%;padding:0.85rem;font-size:12px;letter-spacing:0.14em;" id="course-buy-btn">Purchase This Course</button>
+        <div class="modal-note">Secure checkout · Instant access · Lifetime access</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="lb-nav">
+  <div class="lb-logo">LuxeBeauté <span>Studios</span></div>
+  <ul class="lb-nav-links">
+    <li><a onclick="showSection('courses')">Courses</a></li>
+    <li><a onclick="showSection('supplies')">Supplies</a></li>
+    <li><a onclick="showSection('membership')">Membership</a></li>
+    <li><a onclick="showSection('ai')">Glam AI</a></li>
+  </ul>
+  <button class="lb-nav-cta" onclick="showSection('membership')">Join House of Glam</button>
+</nav>
+
+<!-- HERO -->
+<div class="lb-hero">
+  <p class="lb-eyebrow">Est. House of Glam · Nail Artist Training & Education</p>
+  <h1>Elevate Your<br><em>Nail Artistry</em></h1>
+  <p class="lb-hero-sub">Six professional courses to take you from foundations to a fully booked nail business</p>
+  <div class="lb-hero-btns">
+    <button class="btn-gold" onclick="window.location.href='checkout/bundle-complete-collection.html'">Get the Full Collection — $2,497</button>
+    <button class="btn-outline" onclick="showSection('courses')">Browse Individual Courses</button>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="lb-bar">
+  <button class="lb-bar-tab active" id="tab-courses" onclick="showSection('courses')">Courses & Templates</button>
+  <button class="lb-bar-tab" id="tab-supplies" onclick="showSection('supplies')">Supplies</button>
+  <button class="lb-bar-tab" id="tab-membership" onclick="showSection('membership')">Membership</button>
+  <button class="lb-bar-tab" id="tab-ai" onclick="showSection('ai')">Glam AI Advisor</button>
+</div>
+
+<!-- COURSES SECTION -->
+<div id="section-courses" class="lb-section active">
+  <div class="lb-section-header">
+    <h2 class="lb-section-title">Courses & Templates</h2>
+    <div class="lb-section-rule"></div>
+  </div>
+
+  <!-- BUNDLE HERO -->
+  <div class="bundle-hero">
+    <div class="bundle-top">
+      <div>
+        <span class="bundle-badge">✦ Best Value — Complete Collection</span>
+        <div class="bundle-title">The Complete House<br>of Glam Collection</div>
+        <div class="bundle-desc">All 6 courses in one powerhouse bundle — from foundational prep to content creation. Everything you need to launch, grow, and fully brand your nail career. One purchase. Lifetime access.</div>
+      </div>
+      <div class="bundle-price-block">
+        <div class="bundle-price">$2,497</div>
+        <div class="bundle-orig">$2,682 individually</div>
+        <div class="bundle-save">✦ Save $185</div>
+      </div>
+    </div>
+
+    <div class="bundle-courses-label">All 6 courses included in this bundle</div>
+    <div class="bundle-courses-grid">
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">01</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">Prep, Application & Shaping</div>
+          <div class="bundle-course-price">$497 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">02</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">French Line & Smile Lines</div>
+          <div class="bundle-course-price">$497 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">03</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">Nail Art & Freestyles</div>
+          <div class="bundle-course-price">$497 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">04</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">E-Filing & Advanced Prep</div>
+          <div class="bundle-course-price">$397 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">05</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">Nail Business & Client Booking</div>
+          <div class="bundle-course-price">$447 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+      <div class="bundle-course-item">
+        <div class="bundle-course-num">06</div>
+        <div class="bundle-course-info">
+          <div class="bundle-course-name">Content Creation for Nail Techs</div>
+          <div class="bundle-course-price">$347 value</div>
+          <div class="bundle-course-check">✓ Included</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-cta-row">
+      <button class="btn-gold" style="padding:0.85rem 2.5rem;font-size:12px;" onclick="window.location.href='checkout/bundle-complete-collection.html'">Purchase Complete Collection — $2,497</button>
+      <div class="bundle-value-note">Lifetime access · All 6 courses · <strong>Save $185</strong></div>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL COURSES -->
+  <div class="courses-heading">Or purchase individual courses</div>
+  <div class="lb-products">
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 01</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">Prep, Application & Shaping</div>
+      <div class="lb-product-desc">Master the foundation — proper nail prep, product application, and shaping for a flawless finish every time.</div>
+      <div class="lb-product-price">$497 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-01-prep-application-shaping.html'">Purchase this course →</button>
+    </div>
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 02</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">French Line & Smile Lines</div>
+      <div class="lb-product-desc">Perfect your French tip precision — clean smile lines, baby boomer fades, and classic French clients love.</div>
+      <div class="lb-product-price">$497 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-02-french-line-smile-lines.html'">Purchase this course →</button>
+    </div>
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 03</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">Nail Art & Freestyles</div>
+      <div class="lb-product-desc">Unleash your creativity — freehand painting, stamping, encapsulation, and trending nail art styles.</div>
+      <div class="lb-product-price">$497 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-03-nail-art-freestyles.html'">Purchase this course →</button>
+    </div>
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 04</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">E-Filing & Advanced Prep</div>
+      <div class="lb-product-desc">Master the e-file safely — backfills, cuticle work, surface prep and advanced techniques for speed.</div>
+      <div class="lb-product-price">$397 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-04-efiling-advanced-prep.html'">Purchase this course →</button>
+    </div>
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 05</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">Nail Business & Client Booking</div>
+      <div class="lb-product-desc">Build a thriving nail business — pricing, booking systems, client retention, and growing your clientele.</div>
+      <div class="lb-product-price">$447 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-05-nail-business-client-booking.html'">Purchase this course →</button>
+    </div>
+    <div class="lb-product-card">
+      <div class="lb-product-num">Course 06</div>
+      <span class="lb-product-badge">Course</span>
+      <div class="lb-product-name">Content Creation for Nail Techs</div>
+      <div class="lb-product-desc">Grow your brand online — how to film, edit, and post your nail work to attract clients.</div>
+      <div class="lb-product-price">$347 <span>full access</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/course-06-content-creation-nail-techs.html'">Purchase this course →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPLIES -->
+<div id="section-supplies" class="lb-section">
+  <div class="lb-section-header">
+    <h2 class="lb-section-title">Curated Supplies</h2>
+    <div class="lb-section-rule"></div>
+  </div>
+  <div class="lb-products">
+    <div class="lb-product-card">
+      <span class="lb-product-badge">Supply</span>
+      <div class="lb-product-name">Starter Gel Kit</div>
+      <div class="lb-product-desc">Base, builder & top coat — 36W lamp included</div>
+      <div class="lb-product-price">$129 <span>kit</span></div>
+      <button class="lb-product-cta" onclick="showToast('Starter Gel Kit — $129 added to cart')">Add to cart →</button>
+    </div>
+    <div class="lb-product-card">
+      <span class="lb-product-badge">Supply</span>
+      <div class="lb-product-name">Nail Art Brush Set</div>
+      <div class="lb-product-desc">12-piece precision brushes — striper, detailer, liner & fan</div>
+      <div class="lb-product-price">$49 <span>set</span></div>
+      <button class="lb-product-cta" onclick="showToast('Nail Art Brush Set — $49 added to cart')">Add to cart →</button>
+    </div>
+    <div class="lb-product-card">
+      <span class="lb-product-badge">Supply</span>
+      <div class="lb-product-name">Chrome Powder Pack</div>
+      <div class="lb-product-desc">8 shades — rose gold, silver, holographic & more</div>
+      <div class="lb-product-price">$38 <span>pack</span></div>
+      <button class="lb-product-cta" onclick="showToast('Chrome Powder Pack — $38 added to cart')">Add to cart →</button>
+    </div>
+    <div class="lb-product-card">
+      <span class="lb-product-badge">Supply</span>
+      <div class="lb-product-name">Glam Nail Forms</div>
+      <div class="lb-product-desc">500ct professional C-curve forms for sculpting & extensions</div>
+      <div class="lb-product-price">$22 <span>box</span></div>
+      <button class="lb-product-cta" onclick="showToast('Glam Nail Forms — $22 added to cart')">Add to cart →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERSHIP -->
+<div id="section-membership" class="lb-section">
+  <div class="lb-section-header">
+    <h2 class="lb-section-title">House of Glam Membership</h2>
+    <div class="lb-section-rule"></div>
+  </div>
+  <div class="lb-membership">
+    <div class="lb-tier">
+      <div class="lb-tier-name">Glam Starter</div>
+      <div class="lb-tier-price">$29</div>
+      <div class="lb-tier-cadence">per month</div>
+      <ul class="lb-tier-features">
+        <li><span class="check">✓</span>2 courses per month</li>
+        <li><span class="check">✓</span>Template library access</li>
+        <li><span class="check">✓</span>Community forum</li>
+        <li><span class="check">✓</span>10% supply discount</li>
+      </ul>
+      <button class="btn-outline" onclick="showToast('Glam Starter Membership — joining at $29/mo')" style="width:100%;padding:0.65rem;">Join Starter</button>
+    </div>
+    <div class="lb-tier featured">
+      <div class="lb-tier-name">✦ House Member</div>
+      <div class="lb-tier-price">$59</div>
+      <div class="lb-tier-cadence">per month</div>
+      <ul class="lb-tier-features">
+        <li><span class="check">✓</span>Unlimited course access</li>
+        <li><span class="check">✓</span>New templates monthly</li>
+        <li><span class="check">✓</span>Live monthly masterclass</li>
+        <li><span class="check">✓</span>20% supply discount</li>
+        <li><span class="check">✓</span>Glam AI priority access</li>
+      </ul>
+      <button class="btn-gold" onclick="showToast('House Member Membership — joining at $59/mo')" style="width:100%;padding:0.65rem;">Join House of Glam</button>
+    </div>
+    <div class="lb-tier">
+      <div class="lb-tier-name">Glam Elite</div>
+      <div class="lb-tier-price">$149</div>
+      <div class="lb-tier-cadence">per month</div>
+      <ul class="lb-tier-features">
+        <li><span class="check">✓</span>Everything in House</li>
+        <li><span class="check">✓</span>1:1 monthly coaching call</li>
+        <li><span class="check">✓</span>Business mentorship</li>
+        <li><span class="check">✓</span>30% supply discount</li>
+        <li><span class="check">✓</span>Early course releases</li>
+        <li><span class="check">✓</span>Certifications</li>
+      </ul>
+      <button class="btn-outline" onclick="showToast('Glam Elite Membership — joining at $149/mo')" style="width:100%;padding:0.65rem;">Join Elite</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLAM AI -->
+<div id="section-ai" class="lb-section">
+  <div class="lb-section-header">
+    <h2 class="lb-section-title">Glam AI Advisor</h2>
+    <div class="lb-section-rule"></div>
+  </div>
+  <div class="lb-ai-panel">
+    <div class="lb-ai-header">
+      <div class="lb-ai-dot"></div>
+      <span class="lb-ai-label">Glam AI · Powered by Claude</span>
+    </div>
+    <div class="lb-ai-messages" id="ai-messages">
+      <div class="lb-msg ai">Welcome to the House of Glam. I'm your personal nail business advisor — ask me anything about our courses, the Complete Collection bundle, supplies, or growing your nail career. ✦</div>
+    </div>
+    <div class="lb-ai-chips">
+      <button class="lb-chip" onclick="sendChip('Which course should I start with as a beginner?')">Best course to start</button>
+      <button class="lb-chip" onclick="sendChip('Tell me everything included in the Complete House of Glam Collection bundle for $2,497')">What's in the bundle?</button>
+      <button class="lb-chip" onclick="sendChip('How do I price my nail services?')">Pricing my services</button>
+      <button class="lb-chip" onclick="sendChip('Is the Complete Collection worth it vs buying individually?')">Bundle vs individual?</button>
+    </div>
+    <div class="lb-ai-input-row">
+      <input class="lb-ai-input" id="ai-input" placeholder="Ask about courses, the bundle, supplies…" onkeydown="if(event.key==='Enter')sendAI()" />
+      <button class="lb-ai-send" onclick="sendAI()">Send</button>
+    </div>
+  </div>
+</div>
+
+<footer class="lb-footer">
+  <div class="lb-footer-logo">LuxeBeauté Studios · House of Glam</div>
+  <div class="lb-footer-copy">© 2026 · All rights reserved</div>
+</footer>
+
+<script>
+  function showSection(s) {
+    ['courses','supplies','membership','ai'].forEach(function(id) {
+      var el = document.getElementById('section-'+id);
+      var tab = document.getElementById('tab-'+id);
+      if (el) el.classList.toggle('active', id === s);
+      if (tab) tab.classList.toggle('active', id === s);
+    });
+  }
+
+  function openBundleModal() {
+    document.getElementById('bundle-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('bundle-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function openCourseModal(num, name, price, desc) {
+    document.getElementById('course-modal-num').textContent = num;
+    document.getElementById('course-modal-title').textContent = name;
+    document.getElementById('course-modal-price').textContent = '$' + price;
+    document.getElementById('course-modal-desc').textContent = desc;
+    document.getElementById('course-buy-btn').textContent = 'Purchase ' + name + ' — $' + price;
+    document.getElementById('course-buy-btn').onclick = function() { handlePurchase('course', name, price); };
+    document.getElementById('course-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCourseModal() {
+    document.getElementById('course-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('bundle-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.getElementById('course-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeCourseModal();
+  });
+
+  function handlePurchase(type, name, price) {
+    closeModal();
+    closeCourseModal();
+    if (type === 'bundle-full') {
+      showToast('✦  Complete House of Glam Collection — $2,497 · Redirecting to checkout…');
+    } else if (type === 'bundle-split') {
+      showToast('✦  Complete Collection · 2 payments of $850 — Redirecting to checkout…');
+    } else {
+      showToast('✦  ' + name + ' — $' + price + ' · Redirecting to checkout…');
+    }
+  }
+
+  var toastTimer;
+  function showToast(msg) {
+    var t = document.getElementById('cart-toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.style.display = 'none'; }, 4000);
+  }
+
+  function sendChip(msg) {
+    document.getElementById('ai-input').value = msg;
+    sendAI();
+  }
+
+  async function sendAI() {
+    var input = document.getElementById('ai-input');
+    var userMsg = input.value.trim();
+    if (!userMsg) return;
+    input.value = '';
+    addAiMsg(userMsg, 'user');
+    showSection('ai');
+    var msgs = document.getElementById('ai-messages');
+    var typing = document.createElement('div');
+    typing.className = 'lb-ai-typing';
+    typing.id = 'typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+    try {
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: 'You are Glam AI, the elegant and knowledgeable advisor for LuxeBeauté Studios House of Glam — a luxury nail training brand. Warm, professional, aspirational tone. Keep answers concise (2-4 sentences). COURSES: Course 1 - Prep, Application & Shaping ($300), Course 2 - French Line & Smile Lines ($300), Course 3 - Nail Art & Freestyles ($300), Course 4 - E-Filing & Advanced Prep ($200), Course 5 - Nail Business & Client Booking ($250), Course 6 - Content Creation for Nail Techs ($150). THE COMPLETE HOUSE OF GLAM COLLECTION includes ALL 6 courses for $2,497 total (saves $100 vs $2,682 individually) with lifetime access and payment plan available. Memberships: Starter $29/mo, House Member $59/mo, Elite $149/mo. Always end with an encouraging note or follow-up question.',
+          messages: [{ role: 'user', content: userMsg }]
+        })
+      });
+      var data = await res.json();
+      var reply = (data.content||[]).map(function(b){return b.text||'';}).join('')||"I'm here to help — ask me about any of our courses or the Complete Collection bundle!";
+      var t = document.getElementById('typing'); if(t)t.remove();
+      addAiMsg(reply, 'ai');
+    } catch(e) {
+      var t = document.getElementById('typing'); if(t)t.remove();
+      addAiMsg("I'm having a moment — please try again. In the meantime, explore our courses or ask about the Complete Collection bundle.", 'ai');
+    }
+  }
+
+  function addAiMsg(text, role) {
+    var msgs = document.getElementById('ai-messages');
+    var d = document.createElement('div');
+    d.className = 'lb-msg ' + role;
+    d.innerHTML = text;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+</script>
+</body>
+</html>

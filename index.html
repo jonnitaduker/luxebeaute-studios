@@ -272,6 +272,7 @@
   <div class="lb-logo">LuxeBeauté <span>Studios</span></div>
   <ul class="lb-nav-links">
     <li><a onclick="showSection('courses')">Courses</a></li>
+    <li><a onclick="showSection('nailkit')">Nail Kit</a></li>
     
     
     
@@ -564,6 +565,32 @@
   </div>
 </div>
 
+
+<!-- NAIL KIT SECTION -->
+<div id="section-nailkit" class="lb-section" style="display:none;">
+  <div class="lb-section-header">
+    <h2 class="lb-section-title">Professional Nail Kit</h2>
+    <div class="lb-section-rule"></div>
+  </div>
+  <div class="lb-products" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+    <div class="lb-product-card">
+      <span class="lb-product-badge" style="background:#0e1820;color:#5b9bd5;">✦ Complete Starter Kit</span>
+      <div class="lb-product-name">Professional Nail Kit</div>
+      <div class="lb-product-desc">Everything you need to launch your nail career in one complete kit — 20 professional items including tools, products, practice supplies, and a student workbook.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;">
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">E-File & Lamp</span>
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">Acrylic Powders</span>
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">Practice Hand</span>
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">Gel Polish Set</span>
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">Storage Case</span>
+        <span style="font-size:10px;color:#5b9bd5;border:0.5px solid #5b9bd533;padding:2px 7px;">+15 more items</span>
+      </div>
+      <div class="lb-product-price">$549 <span>complete kit</span></div>
+      <button class="lb-product-cta" onclick="window.location.href='checkout/nail-kit.html'">Purchase Kit →</button>
+    </div>
+  </div>
+</div>
+
 <footer class="lb-footer">
   <div class="lb-footer-logo">LuxeBeauté Studios · House of Glam</div>
   <div class="lb-footer-copy">© 2026 · All rights reserved</div>
@@ -571,7 +598,7 @@
 
 <script>
   function showSection(s) {
-    ['courses','supplies','membership','ai'].forEach(function(id) {
+    ['courses','supplies','membership','ai','nailkit'].forEach(function(id) {
       var el = document.getElementById('section-'+id);
       var tab = document.getElementById('tab-'+id);
       if (el) el.classList.toggle('active', id === s);

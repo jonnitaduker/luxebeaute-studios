@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop · LuxeBeauté Studios House of Glam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background: #0a0a0a; color: #e8dfc8; min-height: 100vh; font-size: 14px; line-height: 1.6; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; border-bottom: 0.5px solid #2a2412; background: #0a0a0a; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 0.75rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; letter-spacing: 0.18em; color: #c9a84c; text-transform: uppercase; }
+    .logo span { color: #e8dfc8; }
+    .nav-back { background: transparent; border: 0.5px solid #2a2010; color: #5a5040; padding: 0.45rem 1.1rem; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .nav-back:hover { color: #c9a84c; border-color: #c9a84c; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1fr 380px; gap: 3rem; align-items: start; }
+    @media(max-width:768px) { .page { grid-template-columns: 1fr; padding: 1.5rem; } }
+
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: #f0e8d2; margin-bottom: 0.25rem; }
+    .section-sub { font-size: 12px; color: #5a5040; font-weight: 300; margin-bottom: 1.5rem; letter-spacing: 0.06em; }
+
+    .category-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4030; padding: 0.75rem 1.5rem; background: #0a0906; border-bottom: 0.5px solid #1a1508; }
+    .product-list { display: flex; flex-direction: column; gap: 1px; background: #1a1508; margin-bottom: 2rem; }
+    .product-item { background: #0d0d0a; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1.25rem; transition: background 0.2s; cursor: pointer; user-select: none; }
+    .product-item:hover { background: #111109; }
+    .product-check { width: 20px; height: 20px; border: 0.5px solid #3a3020; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border-radius: 2px; }
+    .product-check.checked { background: #c9a84c; border-color: #c9a84c; }
+    .product-check.checked::after { content: '✓'; color: #0a0a0a; font-size: 12px; font-weight: 700; }
+    .product-info { flex: 1; }
+    .product-badge { display: inline-block; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; margin-bottom: 4px; background: #1e1508; color: #c9a84c; }
+    .product-badge.kit { background: #0e1820; color: #5b9bd5; }
+    .product-badge.book { background: #1a0e00; color: #e8a020; }
+    .product-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 300; color: #e0d4ba; margin-bottom: 2px; }
+    .product-desc { font-size: 11px; color: #4a4030; font-weight: 300; }
+    .product-price { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; color: #c9a84c; text-align: right; flex-shrink: 0; }
+
+    .bundle-highlight { background: #0e0c06; border: 0.5px solid #c9a84c33; padding: 1.25rem 1.5rem; margin-bottom: 1px; display: flex; align-items: center; gap: 1.25rem; cursor: pointer; transition: all 0.2s; user-select: none; }
+    .bundle-highlight:hover { border-color: #c9a84c66; }
+    .bundle-highlight.selected { border-color: #c9a84c; background: #110f08; }
+    .bundle-info { flex: 1; }
+    .bundle-badge { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #c9a84c; margin-bottom: 4px; }
+    .bundle-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; color: #f0e8d2; margin-bottom: 3px; }
+    .bundle-desc-text { font-size: 11px; color: #5a5040; font-weight: 300; }
+    .bundle-price-block { text-align: right; flex-shrink: 0; }
+    .bundle-price { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: #c9a84c; }
+    .bundle-orig { font-size: 10px; color: #3a3020; text-decoration: line-through; }
+    .bundle-save { font-size: 9px; color: #8a7030; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* CART */
+    .cart-card { background: #0d0c08; border: 0.5px solid #2a2010; position: sticky; top: 80px; }
+    .cart-head { padding: 1.25rem 1.5rem; border-bottom: 0.5px solid #1a1508; display: flex; justify-content: space-between; align-items: center; }
+    .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; color: #f0e8d2; }
+    .cart-count { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #5a5040; }
+    .cart-items { padding: 1rem 1.5rem; min-height: 80px; }
+    .cart-empty { font-size: 12px; color: #3a3020; text-align: center; padding: 1.5rem 0; font-style: italic; }
+    .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #161208; }
+    .cart-item-row:last-child { border-bottom: none; }
+    .cart-item-name { font-size: 12px; color: #8a7e68; font-weight: 300; flex: 1; padding-right: 0.5rem; line-height: 1.4; }
+    .cart-item-price { font-size: 12px; color: #c9a84c; flex-shrink: 0; }
+    .cart-footer { padding: 1rem 1.5rem; border-top: 0.5px solid #1a1508; }
+    .cart-subtotal { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; }
+    .cart-subtotal-label { font-size: 11px; color: #5a5040; letter-spacing: 0.1em; text-transform: uppercase; }
+    .cart-subtotal-val { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: #c9a84c; }
+    .cart-savings { font-size: 10px; color: #8a7040; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; text-align: right; background: #0e0c06; padding: 0.5rem 0.75rem; border: 0.5px solid #c9a84c22; }
+    .checkout-btn { display: block; width: 100%; background: #c9a84c; color: #0a0a0a; border: none; padding: 0.9rem; font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; font-weight: 500; transition: all 0.2s; margin-bottom: 0.75rem; }
+    .checkout-btn:hover { background: #dfc06a; }
+    .checkout-btn:disabled { background: #2a2010; color: #3a3020; cursor: not-allowed; }
+    .secure-note { font-size: 10px; color: #3a3020; text-align: center; letter-spacing: 0.06em; line-height: 1.6; }
+    .single-checkout-note { font-size: 11px; color: #6a5e3a; text-align: center; margin-bottom: 0.75rem; font-style: italic; }
+
+    /* LOADING OVERLAY */
+    .loading-overlay { display: none; position: fixed; inset: 0; background: #000000dd; z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+    .loading-overlay.open { display: flex; }
+    .loading-spinner { width: 40px; height: 40px; border: 2px solid #2a2010; border-top-color: #c9a84c; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #c9a84c; }
+
+    /* ERROR TOAST */
+    .toast { display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #1a0808; border: 0.5px solid #8a3030; color: #e87070; padding: 0.9rem 2rem; font-size: 12px; letter-spacing: 0.08em; z-index: 999; white-space: nowrap; }
+    .toast.show { display: block; }
+
+    .tip-box { font-size: 11px; color: #3a3020; font-style: italic; margin-top: 1rem; padding: 1rem; border: 0.5px solid #1a1508; line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Preparing your checkout…</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<nav class="nav">
+  <div class="logo">LuxeBeauté <span>Studios</span></div>
+  <button class="nav-back" onclick="window.location.href='index.html'">← Back to Courses</button>
+</nav>
+
+<div class="page">
+  <!-- LEFT -->
+  <div>
+    <h1 class="section-title">Build Your Order</h1>
+    <p class="section-sub">Select everything you want — pay once in a single checkout</p>
+
+    <!-- BUNDLE -->
+    <div style="margin-bottom:1.5rem;">
+      <div class="category-label" style="margin-bottom:1px;background:#0e0c06;color:#c9a84c;">✦ Best Value — Recommended</div>
+      <div class="bundle-highlight" id="bundle-item" onclick="toggleBundle()">
+        <div class="product-check" id="bundle-check"></div>
+        <div class="bundle-info">
+          <div class="bundle-badge">✦ Complete Collection — All 6 Courses</div>
+          <div class="bundle-name">The Complete House of Glam Collection</div>
+          <div class="bundle-desc-text">All 6 courses · Lifetime access · Save $185 vs buying individually</div>
+        </div>
+        <div class="bundle-price-block">
+          <div class="bundle-price">$2,497</div>
+          <div class="bundle-orig">$2,682 individually</div>
+          <div class="bundle-save">✦ Save $185</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INDIVIDUAL COURSES -->
+    <div class="category-label">Individual Courses</div>
+    <div class="product-list">
+      <div class="product-item" onclick="toggleProduct(0)">
+        <div class="product-check" id="check-0"></div>
+        <div class="product-info"><span class="product-badge">Course 01</span><div class="product-name">Prep, Application & Shaping</div><div class="product-desc">Master the foundation of nail artistry</div></div>
+        <div class="product-price">$497</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(1)">
+        <div class="product-check" id="check-1"></div>
+        <div class="product-info"><span class="product-badge">Course 02</span><div class="product-name">French Line & Smile Lines</div><div class="product-desc">Perfect your French tip precision</div></div>
+        <div class="product-price">$497</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(2)">
+        <div class="product-check" id="check-2"></div>
+        <div class="product-info"><span class="product-badge">Course 03</span><div class="product-name">Nail Art & Freestyles</div><div class="product-desc">Unleash your creativity with nail art</div></div>
+        <div class="product-price">$497</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(3)">
+        <div class="product-check" id="check-3"></div>
+        <div class="product-info"><span class="product-badge">Course 04</span><div class="product-name">E-Filing & Advanced Prep</div><div class="product-desc">Master the e-file safely and efficiently</div></div>
+        <div class="product-price">$397</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(4)">
+        <div class="product-check" id="check-4"></div>
+        <div class="product-info"><span class="product-badge">Course 05</span><div class="product-name">Nail Business & Client Booking</div><div class="product-desc">Build a thriving nail business</div></div>
+        <div class="product-price">$447</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(5)">
+        <div class="product-check" id="check-5"></div>
+        <div class="product-info"><span class="product-badge">Course 06</span><div class="product-name">Content Creation for Nail Techs</div><div class="product-desc">Grow your brand online</div></div>
+        <div class="product-price">$347</div>
+      </div>
+    </div>
+
+    <!-- ADD-ONS -->
+    <div class="category-label">Add-Ons</div>
+    <div class="product-list">
+      <div class="product-item" onclick="toggleProduct(6)">
+        <div class="product-check" id="check-6"></div>
+        <div class="product-info"><span class="product-badge book">Digital Book</span><div class="product-name">Mastering Acrylic Application</div><div class="product-desc">100+ page workbook · Instant PDF download</div></div>
+        <div class="product-price">$147</div>
+      </div>
+      <div class="product-item" onclick="toggleProduct(7)">
+        <div class="product-check" id="check-7"></div>
+        <div class="product-info"><span class="product-badge kit">Nail Kit</span><div class="product-name">Professional Nail Kit</div><div class="product-desc">20 professional items · Complete starter kit</div></div>
+        <div class="product-price">$549</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      ✦ <strong style="color:#6a5e3a;">Tip:</strong> If you want all 6 courses, selecting the Complete Collection bundle saves you $185 vs buying each course individually. Add the digital book or nail kit to your bundle for one easy checkout!
+    </div>
+  </div>
+
+  <!-- RIGHT: CART -->
+  <div class="cart-card">
+    <div class="cart-head">
+      <div class="cart-title">Your Cart</div>
+      <div class="cart-count" id="cart-count">0 items</div>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">No items selected yet.<br>Click any item to add it.</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">Total</span>
+        <span class="cart-subtotal-val" id="cart-total">$0</span>
+      </div>
+      <div class="cart-savings" id="cart-savings" style="display:none;"></div>
+      <div class="single-checkout-note" id="checkout-note" style="display:none;">✦ One payment · All items included</div>
+      <button class="checkout-btn" id="checkout-btn" onclick="goToCheckout()" disabled>Select items to continue</button>
+      <div class="secure-note">Powered by Stripe · One secure checkout<br>Pay for all items in a single transaction</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Stripe publishable key — replace with your real key
+  var stripe = Stripe('pk_live_51Tla1TAofEdK64qoa5jysDtSfVnusnUwGPl9i1Pv3xvbIL3bgGhkXHUWOpS8rGbfw38kMj4tQQsf6QdD7mjrF20M00JlTLztDf');
+
+  var products = [
+    { name: 'Prep, Application & Shaping',     price: 497, priceId: 'price_1TtTnsAofEdK64qotHKpguI8' },
+    { name: 'French Line & Smile Lines',        price: 497, priceId: 'price_1TtTn0AofEdK64qomqD7lX0I' },
+    { name: 'Nail Art & Freestyles',            price: 497, priceId: 'price_1TtTmEAofEdK64qoyaV9HrSi' },
+    { name: 'E-Filing & Advanced Prep',         price: 397, priceId: 'price_1TtTcLAofEdK64qok9eh59Zy' },
+    { name: 'Nail Business & Client Booking',   price: 447, priceId: 'price_1TtTlGAofEdK64qo51cXnC2i' },
+    { name: 'Content Creation for Nail Techs',  price: 347, priceId: 'price_1TtTMEAofEdK64qopRD42Yti' },
+    { name: 'Mastering Acrylic Application',    price: 147, priceId: 'price_1TtWGRAofEdK64qoLU41gYTH' },
+    { name: 'Professional Nail Kit',            price: 549, priceId: 'price_1TveBMAofEdK64qo4tDAruhX'  },
+  ];
+
+  var bundle = { name: 'Complete House of Glam Collection', price: 2497, priceId: 'price_1Tt9ZXAofEdK64qocY6TY0wh' };
+
+  var selected = [false,false,false,false,false,false,false,false];
+  var bundleSelected = false;
+
+  function toggleBundle() {
+    bundleSelected = !bundleSelected;
+    if (bundleSelected) { for (var i=0;i<6;i++) selected[i]=false; }
+    updateUI();
+  }
+
+  function toggleProduct(idx) {
+    if (bundleSelected && idx < 6) { bundleSelected = false; }
+    selected[idx] = !selected[idx];
+    updateUI();
+  }
+
+  function updateUI() {
+    // Checkboxes
+    var bc = document.getElementById('bundle-check');
+    var bi = document.getElementById('bundle-item');
+    bc.className = 'product-check' + (bundleSelected ? ' checked' : '');
+    bi.className = 'bundle-highlight' + (bundleSelected ? ' selected' : '');
+    for (var i=0;i<8;i++) {
+      var el = document.getElementById('check-'+i);
+      if (el) el.className = 'product-check' + (selected[i] ? ' checked' : '');
+    }
+
+    // Build item list
+    var items = [];
+    if (bundleSelected) items.push(bundle);
+    for (var i=0;i<8;i++) { if (selected[i]) items.push(products[i]); }
+
+    // Total
+    var total = 0;
+    items.forEach(function(it){ total += it.price; });
+
+    // Cart items HTML
+    var cartEl = document.getElementById('cart-items');
+    if (items.length === 0) {
+      cartEl.innerHTML = '<div class="cart-empty">No items selected yet.<br>Click any item to add it.</div>';
+    } else {
+      var html = '';
+      items.forEach(function(it){
+        html += '<div class="cart-item-row"><span class="cart-item-name">'+it.name+'</span><span class="cart-item-price">$'+it.price.toLocaleString()+'</span></div>';
+      });
+      cartEl.innerHTML = html;
+    }
+
+    // Bundle suggestion
+    var courseCount = 0;
+    var courseTotal = 0;
+    for (var i=0;i<6;i++) { if(selected[i]){ courseCount++; courseTotal += products[i].price; } }
+    var savingsEl = document.getElementById('cart-savings');
+    if (courseCount >= 3 && !bundleSelected && courseTotal > 2497) {
+      savingsEl.style.display = 'block';
+      savingsEl.textContent = '✦ Switch to the bundle — save $'+(courseTotal-2497).toLocaleString()+'!';
+    } else {
+      savingsEl.style.display = 'none';
+    }
+
+    // Total & button
+    document.getElementById('cart-total').textContent = '$'+total.toLocaleString();
+    var btn = document.getElementById('checkout-btn');
+    var note = document.getElementById('checkout-note');
+    if (items.length === 0) {
+      btn.disabled = true;
+      btn.textContent = 'Select items to continue';
+      note.style.display = 'none';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Checkout — $'+total.toLocaleString();
+      note.style.display = 'block';
+    }
+
+    window._cartItems = items;
+    window._cartTotal = total;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show';
+    setTimeout(function(){ t.className = 'toast'; }, 4000);
+  }
+
+  async function goToCheckout() {
+    var items = window._cartItems || [];
+    if (items.length === 0) return;
+
+    // Build line items for Stripe
+    var lineItems = items.map(function(it){
+      return { price: it.priceId, quantity: 1 };
+    });
+
+    document.getElementById('loading').classList.add('open');
+
+    try {
+      var result = await stripe.redirectToCheckout({
+        lineItems: lineItems,
+        mode: 'payment',
+        successUrl: window.location.origin + '/index.html?success=true',
+        cancelUrl: window.location.href,
+      });
+      if (result.error) {
+        document.getElementById('loading').classList.remove('open');
+        showToast(result.error.message);
+      }
+    } catch(e) {
+      document.getElementById('loading').classList.remove('open');
+      showToast('Something went wrong. Please try again.');
+    }
+  }
+</script>
+</body>
+</html>

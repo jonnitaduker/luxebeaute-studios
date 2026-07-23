@@ -301,33 +301,114 @@
     setTimeout(function(){ t.className = 'toast'; }, 4000);
   }
 
-  async function goToCheckout() {
+  function goToCheckout() {
     var items = window._cartItems || [];
     if (items.length === 0) return;
 
-    // Build line items for Stripe
-    var lineItems = items.map(function(it){
-      return { price: it.priceId, quantity: 1 };
-    });
-
-    document.getElementById('loading').classList.add('open');
-
-    try {
-      var result = await stripe.redirectToCheckout({
-        lineItems: lineItems,
-        mode: 'payment',
-        successUrl: window.location.origin + '/index.html?success=true',
-        cancelUrl: window.location.href,
-      });
-      if (result.error) {
-        document.getElementById('loading').classList.remove('open');
-        showToast(result.error.message);
-      }
-    } catch(e) {
-      document.getElementById('loading').classList.remove('open');
-      showToast('Something went wrong. Please try again.');
+    // If only one item, go directly to its Stripe link
+    if (items.length === 1) {
+      // Find the matching stripe link
+      var stripeLinks = {
+        'price_1TtTnsAofEdK64qotHKpguI8': 'https://buy.stripe.com/28EaEW4MfcbP3Ud8qA0gw00',
+        'price_1TtTn0AofEdK64qomqD7lX0I': 'https://buy.stripe.com/fZu8wOdiL6Rv0I14ak0gw01',
+        'price_1TtTmEAofEdK64qoyaV9HrSi': 'https://buy.stripe.com/4gM8wOa6zdfTaiBeOY0gw02',
+        'price_1TtTcLAofEdK64qok9eh59Zy': 'https://buy.stripe.com/00w14ma6zejX3Ud22c0gw03',
+        'price_1TtTlGAofEdK64qo51cXnC2i': 'https://buy.stripe.com/bJe5kCbaDfo1eyRgX60gw04',
+        'price_1TtTMEAofEdK64qopRD42Yti': 'https://buy.stripe.com/28E7sK4Mf5Nr8at5eo0gw05',
+        'price_1Tt9ZXAofEdK64qocY6TY0wh': 'https://buy.stripe.com/dRmbJ06Ungs52Q936g0gw06',
+        'price_1TtWGRAofEdK64qoLU41gYTH': 'https://buy.stripe.com/fZucN4fqTfo11M5cGQ0gw07',
+        'price_1TveBMAofEdK64qo4tDAruhX': 'https://buy.stripe.com/5kQ8wOdiL1xb4Yh6is0gw08',
+      };
+      window.location.href = stripeLinks[items[0].priceId];
+      return;
     }
+
+    // For multiple items — open a modal showing each payment link
+    document.getElementById('multi-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    var stripeLinks = {
+      'price_1TtTnsAofEdK64qotHKpguI8': 'https://buy.stripe.com/28EaEW4MfcbP3Ud8qA0gw00',
+      'price_1TtTn0AofEdK64qomqD7lX0I': 'https://buy.stripe.com/fZu8wOdiL6Rv0I14ak0gw01',
+      'price_1TtTmEAofEdK64qoyaV9HrSi': 'https://buy.stripe.com/4gM8wOa6zdfTaiBeOY0gw02',
+      'price_1TtTcLAofEdK64qok9eh59Zy': 'https://buy.stripe.com/00w14ma6zejX3Ud22c0gw03',
+      'price_1TtTlGAofEdK64qo51cXnC2i': 'https://buy.stripe.com/bJe5kCbaDfo1eyRgX60gw04',
+      'price_1TtTMEAofEdK64qopRD42Yti': 'https://buy.stripe.com/28E7sK4Mf5Nr8at5eo0gw05',
+      'price_1Tt9ZXAofEdK64qocY6TY0wh': 'https://buy.stripe.com/dRmbJ06Ungs52Q936g0gw06',
+      'price_1TtWGRAofEdK64qoLU41gYTH': 'https://buy.stripe.com/fZucN4fqTfo11M5cGQ0gw07',
+      'price_1TveBMAofEdK64qo4tDAruhX': 'https://buy.stripe.com/5kQ8wOdiL1xb4Yh6is0gw08',
+    };
+
+    var total = window._cartTotal || 0;
+    document.getElementById('multi-total').textContent = '$' + total.toLocaleString();
+
+    var itemsHtml = '';
+    items.forEach(function(it) {
+      itemsHtml += '<div class="m-item-row"><span class="m-item-name">' + it.name + '</span><span class="m-item-price">$' + it.price.toLocaleString() + '</span></div>';
+    });
+    document.getElementById('multi-items').innerHTML = itemsHtml;
+
+    var linksHtml = '';
+    items.forEach(function(it, idx) {
+      linksHtml += '<a class="m-pay-btn" href="' + stripeLinks[it.priceId] + '" target="_blank" onclick="markPaid('+idx+', this)">' +
+        '<span class="m-pay-num">' + (idx+1) + '</span>' +
+        '<span class="m-pay-info"><span class="m-pay-name">' + it.name + '</span></span>' +
+        '<span class="m-pay-price">$' + it.price.toLocaleString() + ' →</span>' +
+      '</a>';
+    });
+    document.getElementById('multi-links').innerHTML = linksHtml;
+  }
+
+  function markPaid(idx, el) {
+    setTimeout(function() {
+      el.style.opacity = '0.4';
+      el.style.borderColor = '#4a7020';
+      el.style.color = '#6aab6a';
+    }, 500);
+  }
+
+  function closeMultiModal() {
+    document.getElementById('multi-modal').classList.remove('open');
+    document.body.style.overflow = '';
   }
 </script>
+
+<!-- MULTI ITEM MODAL -->
+<div class="modal-bg" id="multi-modal" style="display:none;position:fixed;inset:0;background:#000000cc;z-index:200;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#0d0c08;border:0.5px solid #3a2c10;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;">
+    <div style="padding:1.5rem;border-bottom:0.5px solid #1e1a10;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c9a84c;margin-bottom:5px;">Your Order</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:#f0e8d2;">Complete Your Purchases</div>
+      </div>
+      <button onclick="closeMultiModal()" style="background:none;border:none;color:#4a4030;font-size:22px;cursor:pointer;">×</button>
+    </div>
+    <div style="padding:1.5rem;">
+      <div id="multi-items" style="margin-bottom:1rem;border-bottom:0.5px solid #1a1508;padding-bottom:1rem;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;">
+        <span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#5a5040;">Order Total</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:#c9a84c;" id="multi-total">$0</span>
+      </div>
+      <div style="background:#0a0906;border:0.5px solid #1a1508;padding:1rem;margin-bottom:1.5rem;font-size:12px;color:#5a5040;line-height:1.7;">
+        Click each button below to pay for each item. Each opens a secure Stripe checkout in a new tab. Once paid, your access details will be emailed to you instantly.
+      </div>
+      <div id="multi-links" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div style="font-size:10px;color:#3a3020;text-align:center;margin-top:1rem;letter-spacing:0.06em;">Secure checkout · Powered by Stripe · 256-bit SSL</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #multi-modal.open { display: flex !important; }
+  .m-item-row { display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:0.5px solid #161208;font-size:13px; }
+  .m-item-name { color:#8a7e68;font-weight:300; }
+  .m-item-price { color:#c9a84c; }
+  .m-pay-btn { display:flex;align-items:center;gap:12px;background:#0a0906;border:0.5px solid #2a2010;padding:0.9rem 1rem;color:#c8bda0;text-decoration:none;transition:all 0.2s;cursor:pointer; }
+  .m-pay-btn:hover { border-color:#c9a84c;background:#0d0c08; }
+  .m-pay-num { width:24px;height:24px;border:0.5px solid #3a3020;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#5a5040;flex-shrink:0; }
+  .m-pay-info { flex:1; }
+  .m-pay-name { font-size:13px;color:#c8bda0;font-weight:300; }
+  .m-pay-price { font-size:13px;color:#c9a84c;flex-shrink:0;font-family:'Cormorant Garamond',serif; }
+</style>
 </body>
 </html>
